@@ -1,9 +1,12 @@
 describe('Single test', () => {
   it('passes', () => {
-    cy.visit('https://www.reddit.com/r/india/comments/17u7wt6/i_applied_for_a_job_through_a_placement_company/')
-    cy.get('#post-title-t3_17u7wt6').then(($el)=>{
-      cy.visualTest($el, {testName: "demo", isTest:true})
-    })
-    cy.visualtest
+    cy.visit("YOUR_URL")
+    //write your tests
+
+    //ideally you'd want to do visual regression as a separte test, but if you want to execute it with test flow, add it in same test.
+    
+    // config can include a list of selectors of elements which you want to blackout from visual comparison 
+    
+    cy.visualTest("YOUR_SELECTOR_GOES_HERE", config_goes_here)
   })
 })

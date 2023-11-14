@@ -25,11 +25,8 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 
-Cypress.Commands.add('vcomp', (mainSelector, options)=>{
-    cy.get(mainSelector).screenshot()
-})
 import testImage from "./utils";
- 
+
 const defaultConfig = {
   isTest: true,
   threshold: 0.1,
@@ -41,7 +38,8 @@ const defaultConfig = {
   baselineImageName: "b- testName",
   testImageName: "t- testName",
   rootDir: "cypress/screenshots/",
-  extension: '.png'
+  extension: ".png",
+  blackout : []
 };
 //config should contain {testName: name, isTest:true, }
 Cypress.Commands.add("visualTest", (el, config) => {
@@ -49,19 +47,26 @@ Cypress.Commands.add("visualTest", (el, config) => {
   let testResult = false;
   config.baselineImageName = "b- " + config.testName;
   config.testImageName = "t- " + config.testName;
-  console.log(config)
-  ssGenerator(el, config);
-  if (config.isTest) {
-    testResult = testImage(config);
-  }
-  console.log(testResult)
-//   if (!testResult) {
-//     cy.fail("Visual mismatch between baseline and test image");
-//   } else {
-//     cy.log("Visual regression passed!");
-//   }
+  //   console.log(config)
+  config.blackout.forEach(blackoutSelector => {
+    cy.get(blackoutSelector).invoke('hide')
+    
+  });
+  cy.get(selector).then(($el) => {
+    ssGenerator($el, config);
+    if (config.isTest) {
+      testResult = testImage(config);
+      console.log(testResult);
+    }
+  });
+
+  //   if (!testResult) {
+  //     cy.fail("Visual mismatch between baseline and test image");
+  //   } else {
+  //     cy.log("Visual regression passed!");
+  //   }
 });
- 
+
 function ssGenerator(el, config) {
   if (el.length !== 1) {
     cy.log(el[0]);
@@ -75,7 +80,8 @@ function ssGenerator(el, config) {
     width: elProps.width,
     height: elProps.height,
   };
-  console.log(config)
+  // console.log(config);
+  cy.wait(1000);
   if (!config.isTest || false) {
     cy.screenshot(config.baselineImagePath + config.baselineImageName, {
       capture: "viewport",
