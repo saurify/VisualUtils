@@ -25,7 +25,9 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 
+import { error } from "console";
 import testImage from "./utils";
+const fs = require('fs');
 
 const defaultConfig = {
   isTest: true,
@@ -38,27 +40,39 @@ const defaultConfig = {
   baselineImageName: "b- testName",
   testImageName: "t- testName",
   rootDir: "cypress/screenshots/",
+  logFilename: "logs.json",
   extension: ".png",
-  blackout : []
+  blackout: [] //selectors of components you want to blackout
 };
 //config should contain {testName: name, isTest:true, }
-Cypress.Commands.add("visualTest", (el, config) => {
+Cypress.Commands.add("visualTest", (selector, config) => {
   config = Object.assign({}, defaultConfig, config);
   let testResult = false;
-  config.baselineImageName = "b- " + config.testName;
-  config.testImageName = "t- " + config.testName;
-  //   console.log(config)
-  config.blackout.forEach(blackoutSelector => {
-    cy.get(blackoutSelector).invoke('hide')
-    
-  });
-  cy.get(selector).then(($el) => {
-    ssGenerator($el, config);
-    if (config.isTest) {
-      testResult = testImage(config);
-      console.log(testResult);
+  config.baselineImageName = "b- " + config.testName
+  logManager(config).then((data) => {
+    config = data
+    config.blackout.forEach(blackoutSelector => {
+      cy.get(blackoutSelector).invoke('hide')
+
+    });
+    cy.get(selector).then(($el) => {
+      ssGenerator($el, config);
+      if (config.isTest) {
+        testResult = testImage(config);
+        if (testResult) {
+          cy.log("Visual regression passed for : ", config.testName)
+        }
+        else {
+          // cy.log("Visual regression failed for : ", config.testName)
+          error("Visual regression failed for : ", config.testName)
+        }
+        logManager(config)
+
+      }
     }
-  });
+    )
+  })
+
 
   //   if (!testResult) {
   //     cy.fail("Visual mismatch between baseline and test image");
@@ -85,23 +99,65 @@ function ssGenerator(el, config) {
   if (!config.isTest || false) {
     cy.screenshot(config.baselineImagePath + config.baselineImageName, {
       capture: "viewport",
-      clip: {
-        x: elProps.left,
-        y: elProps.top,
-        width: elProps.width,
-        height: elProps.height,
-      },
+      clip: clipEl,
     });
     // el.screenshot(config.baselineImagePath + baselineImageName);
   } else {
     cy.screenshot(config.testImagePath + config.testImageName, {
       capture: "viewport",
-      clip: {
-        x: elProps.left,
-        y: elProps.top,
-        width: elProps.width,
-        height: elProps.height,
-      },
+      clip: clipEl,
     });
   }
+}
+
+function logManager(config) {
+  let logFilename = config.logFilename;
+  let exists;
+  let logs;
+
+  return cy.task('fileCheck', logFilename)
+    .then((data) => {
+      exists = data;
+    })
+    .then(() => {
+      if (!exists) {
+        return cy.task('fileSave', [logFilename, JSON.stringify({ "1": [] })]);
+      }
+    })
+    .then(() => {
+      return cy.task('fileRead', logFilename)
+        .then((data) => {
+          logs = JSON.parse(data);
+          var currentRunId = Math.max(...Object.keys(logs));
+
+          if (checkForTest(config.testName, logs[currentRunId])) {
+            currentRunId += 1;
+            logs[currentRunId] = [];
+          }
+          if (!config.resultName) {
+            config.testImageName = "t- " + config.testName + " " + currentRunId;
+
+            config.currentRunId = currentRunId;
+          } else {
+            logs[currentRunId].push({ testName: config.testName, baselineImageName: config.baselineImageName, testImageName: config.testImageName, resultName: config.resultName, status: config.status });
+            return cy.task('fileSave', [logFilename, JSON.stringify(logs)]);
+          }
+        });
+    })
+    .then(() => {
+      return config;
+    });
+}
+
+
+function checkForTest(testName, data) {
+  var res = false
+  data.forEach((el) => {
+    console.log(el)
+    if (el["testName"] == testName) {
+      res = true
+    }
+  })
+  // console.log("data", data, res)
+  return res
 }
