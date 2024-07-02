@@ -26,7 +26,7 @@
 
 
 import { error } from "console";
-import testImage from "./utils";
+import {testImage, callFail} from "./utils";
 const fs = require('fs');
 
 const defaultConfig = {
@@ -47,7 +47,7 @@ const defaultConfig = {
 //config should contain {testName: name, isTest:true, }
 Cypress.Commands.add("visualTest", (selector, config) => {
   config = Object.assign({}, defaultConfig, config);
-  let testResult = false;
+  // let testResult = false;
   config.baselineImageName = "b- " + config.testName
   logManager(config).then((data) => {
     config = data
@@ -58,16 +58,23 @@ Cypress.Commands.add("visualTest", (selector, config) => {
     cy.get(selector).then(($el) => {
       ssGenerator($el, config);
       if (config.isTest) {
-        testResult = testImage(config);
-        if (testResult) {
-          cy.log("Visual regression passed for : ", config.testName)
-        }
-        else {
-          // cy.log("Visual regression failed for : ", config.testName)
-          error("Visual regression failed for : ", config.testName)
-        }
-        logManager(config)
-
+        testImage(config)
+      //   testImage((config)).then((resConfig)=>{
+      //     console.log("res",resConfig)
+      //     let testResult = resConfig
+        
+      //   if (testResult.fail) {
+      //     cy.log("Visual regression passed for : ", config.testName)
+      //   }
+      //   else {
+      //     cy.log("Visual regression failed for : ", config.testName)
+      //     callFail()
+      //     // throw new Error("Visual regression failed for : ", config.testName)
+      //     // cy.log(testImage)
+      //     // console.log(testResult)
+      //   }
+      //   logManager(config)
+      // });
       }
     }
     )

@@ -67,7 +67,7 @@ function pixelmatch(img1, img2, output, width, height, options) {
                         drawPixel(output, pos, ...(delta < 0 && options.diffColorAlt || options.diffColor));
                     }
                     diff++;
-                    fail = true;
+
                 }
 
             } else if (output) {
@@ -80,6 +80,7 @@ function pixelmatch(img1, img2, output, width, height, options) {
     // return the number of different pixels
     return diff;
 }
+
 
 function isPixelData(arr) {
     // work around instanceof Uint8Array not working properly in some Jest environments

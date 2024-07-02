@@ -2,7 +2,6 @@
 const PNG = require("pngjs").PNG;
 import pixelmatch from "./compareutils";
 
-module.exports = testImage;
 
 const defaultPathOptions = {
   baselineImagePath: "./images/baselineImages/",
@@ -12,8 +11,9 @@ const defaultPathOptions = {
   baselineImageName: "f1.png",
   testImageName: "t1.png",
 };
+let hasFailed = 0
 
-async function testImage(config) {
+export async function testImage(config) {
   let pathOptions = Object.assign({}, defaultPathOptions, config);
   // console.log(Object.keys(fs))
   // const imgB = PNG.sync.read(fs.readFileSync('C:\dev\platform\settingevaluator\SettingEvaluator\Apt.Platform.SettingEvaluator.Tests\cypress\screenshots\images\baselineImages'+ 'b- Quick_Help.png'));
@@ -52,12 +52,21 @@ async function testImage(config) {
         pathOptions.rootDir + pathOptions.resultImagePath + config.resultName + ".png",
         PNG.sync.write(diff),
         { encoding: "binary" }
-      );
+      ).then(() => {
+        config.status = (fail > 0) ? false : true
+        if (fail){
+          callFail()
+        }
+        // return config
+  
+      });;
     })
-    .then(() => {
-      config.status = (fail > 0) ? false : true
-      return config;
-    });
+    
+
+    
+    
+//method = error|warning
+
   //   let imgTdata;
   //   //   console.log("done reading baseline image data", imgBdata)
 
@@ -69,4 +78,13 @@ async function testImage(config) {
   //   console.log("done reading baseline image data", imgBdata);
   //   //   const imgT = PNG.sync.read(Buffer.from(imgTdata, 'binary'));
   //   console.log("Processed test image");
+}
+export function callFail(){
+
+      if (Cypress.env('imageCompareFailResponse')==="error"){
+        throw new Error("Difference setected, visit screenshots/results to check for the differences in baseline image and test image")      }
+      else{
+         cy.log("Differenece detected, check difference image in screenshots/results folder")
+      }
+
 }
