@@ -1,0 +1,74 @@
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'unload'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+Error with Permissions-Policy header: Unrecognized feature: 'ch-ua-form-factors'.
+utils.js:84 false '/home/saurify/projects/VisualUtils/cypress/screenshots'
+index-c16b33e0.js:117819 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 runner:next listeners added. Use emitter.setMaxListeners() to increase limit
+    at _addListener (https://www.google.com/__/assets/index-c16b33e0.js:117941:16)
+    at EventEmitter.addListener (https://www.google.com/__/assets/index-c16b33e0.js:117952:10)
+    at handlePausing (https://www.google.com/__/assets/index-c16b33e0.js:118168:15)
+    at EventManager._addListeners (https://www.google.com/__/assets/index-c16b33e0.js:124737:5)
+    at EventManager.setup (https://www.google.com/__/assets/index-c16b33e0.js:124570:10)
+    at Object.executeSpec (https://www.google.com/__/assets/index-c16b33e0.js:125145:27)
+ProcessEmitWarning @ index-c16b33e0.js:117819
+_addListener @ index-c16b33e0.js:117946
+addListener @ index-c16b33e0.js:117952
+handlePausing @ index-c16b33e0.js:118168
+_addListeners @ index-c16b33e0.js:124737
+setup @ index-c16b33e0.js:124570
+executeSpec @ index-c16b33e0.js:125145
+index-c16b33e0.js:117819 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 runner:resume listeners added. Use emitter.setMaxListeners() to increase limit
+    at _addListener (https://www.google.com/__/assets/index-c16b33e0.js:117941:16)
+    at EventEmitter.addListener (https://www.google.com/__/assets/index-c16b33e0.js:117952:10)
+    at handlePausing (https://www.google.com/__/assets/index-c16b33e0.js:118178:15)
+    at EventManager._addListeners (https://www.google.com/__/assets/index-c16b33e0.js:124737:5)
+    at EventManager.setup (https://www.google.com/__/assets/index-c16b33e0.js:124570:10)
+    at Object.executeSpec (https://www.google.com/__/assets/index-c16b33e0.js:125145:27)
+ProcessEmitWarning @ index-c16b33e0.js:117819
+_addListener @ index-c16b33e0.js:117946
+addListener @ index-c16b33e0.js:117952
+handlePausing @ index-c16b33e0.js:118178
+_addListeners @ index-c16b33e0.js:124737
+setup @ index-c16b33e0.js:124570
+executeSpec @ index-c16b33e0.js:125145
+utils.js:82 undefined '/home/saurify/projects/VisualUtils/cypress/screenshots'
+utils.js:21 undefined '/home/saurify/projects/VisualUtils/cypress/screenshots'
+utils.js:21 2 undefined /home/saurify/projects/VisualUtils/cypress/screenshots
+DevTools failed to load source map: Could not load content for https://www.google.com/__cypress/runner/mobxreact.cjs.production.min.js.map: HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
+DevTools failed to load source map: Could not load content for https://ogs.google.com/chrome.css.map: HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
+DevTools failed to load source map: Could not load content for https://www.google.com/xjs/_/ss/k=xjs.hd.WMqlZHCxaw0.L.B1.O/am=AEwBAAAAAACAAQAAAAAAAAAAAAAAAACAAABAAAAAAAAACgCfBAAEADYEAAAAIABAAAAAAAAAKAAAAMAAAAAEAJAAEAAQEAAAAACAEEAAQAAIUASQACgIMgABAAARAAOGARAVAAwBAAAAAQQAAAAA4EYAAgQAgBAAAXgAAQAE6AABMAAIAAAAAAMYCAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAgAKAAAAAAAAAAAAAAAAAAAACA/d=1/ed=1/br=1/rs=ACT90oFUvOXGzts_e1VfnYW6H9GKgFhcow/suggestion_group.css.map: HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
+utils.js:21 ƒ (key, value) {
+      switch (arguments.length) {
+        case 0:
+          return get();
+        case 1:
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isString)(key)) {
+            return get(… undefined '/home/saurify/projects/VisualUtils/cypress/screenshots'
+DevTools failed to load source map: Could not load content for https://ogs.google.com/chrome.css.map: HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE

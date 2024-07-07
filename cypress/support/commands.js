@@ -24,13 +24,13 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import { testImage, callFail } from "./utils";
+import { testImage, baseScreenshotRunDir } from "./utils";
 
 export const defaultConfig = {
   isTest: true,
   threshold: 0.1,
   alpha: 0.1,
-  baselineImagePath: "images/baselineImages/",
+  baselineImagePath: Cypress.env("baselineImageDir"),
   testImagePath: "images/testImages/",
   resultImagePath: "images/results/",
   testName: "testName.png",
@@ -57,6 +57,12 @@ Cypress.Commands.add("visualTest", (selector, config) => {
       cy.get(blackoutSelector).invoke("hide");
     });
     cy.get(selector).then(($el) => {
+      if (!config.isTest){
+        cy.task(
+          "deleteFile",
+          Cypress.env("baselineImageDir") + config.baselineImageName
+        ).should("be.null");
+      }
       ssGenerator($el, config);
       if (config.isTest) {
         testImage(config);
@@ -77,7 +83,8 @@ Cypress.Commands.add("visualTest", (selector, config) => {
         //   }
         //   logManager(config)
         // });
-      }
+      } 
+        
     });
   });
 
@@ -110,6 +117,10 @@ function ssGenerator(el, config) {
     });
     // el.screenshot(config.baselineImagePath + baselineImageName);
   } else {
+    cy.task(
+          "deleteFile",
+          baseScreenshotRunDir() + config.testImagePath+ config.testImageName
+        ).should("be.null");
     cy.screenshot(config.testImagePath + config.testImageName, {
       capture: "viewport",
       clip: clipEl,

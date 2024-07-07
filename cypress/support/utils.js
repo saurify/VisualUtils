@@ -3,10 +3,8 @@ const PNG = require("pngjs").PNG;
 import pixelmatch from "./compareutils";
 
 const defaultPathOptions = {
-  baselineImagePath: "./images/baselineImages/",
+  baselineImagePath: Cypress.env("baselineImageDir"),
   testImagePath: "./images/testImages/",
-  resultImagePath:
-    "C:/dev/platform/settingevaluator/SettingEvaluator/Apt.Platform.SettingEvaluator.Tests/cypress/screenshots/images/results/",
   baselineImageName: "f1.png",
   testImageName: "t1.png",
 };
@@ -20,19 +18,21 @@ export async function testImage(config) {
   let imgB;
   let imgT;
   let fail;
-  cy.readFile(
-    pathOptions.rootDir +
+  
+
+  let cypressRunMode = cy
+    .readFile(
       pathOptions.baselineImagePath +
-      config.baselineImageName +
-      config.extension,
-    "binary"
-  )
+        config.baselineImageName +
+        config.extension,
+      "binary"
+    )
     .then((imgBdata) => {
       imgB = PNG.sync.read(Buffer.from(imgBdata, "binary"));
     })
     .then(() => {
       cy.readFile(
-        pathOptions.rootDir +
+        baseScreenshotRunDir() +
           pathOptions.testImagePath +
           config.testImageName +
           config.extension,
@@ -48,7 +48,7 @@ export async function testImage(config) {
       fail = pixelmatch(imgB.data, imgT.data, diff.data, width, height, config);
       config.resultName = config.testName;
       cy.writeFile(
-        pathOptions.rootDir +
+        baseScreenshotRunDir() +
           pathOptions.resultImagePath +
           config.resultName +
           ".png",
@@ -78,6 +78,17 @@ export async function testImage(config) {
   //   //   const imgT = PNG.sync.read(Buffer.from(imgTdata, 'binary'));
   //   console.log("Processed test image");
 }
+const getCypressMode = () => {
+  return Cypress.config('isInteractive') ;
+};
+
+export const baseScreenshotRunDir = () => {
+  if (getCypressMode()) {
+    // console.log("GUI", Cypress.config().screenshotsFolder);
+
+    return `${Cypress.config().screenshotsFolder}/`;
+  } else return `${Cypress.config().screenshotsFolder}/${Cypress.spec.name}/`;
+};
 export function callFail() {
   if (Cypress.env("imageCompareFailResponse") === "error") {
     throw new Error(

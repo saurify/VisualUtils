@@ -14,18 +14,18 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
-import { defaultConfig } from './commands';
-before(()=>{
-    cy.task(
-        "folderRemove",
-        "./cypress/screenshots/" + defaultConfig.testImagePath
-      ).should("be.null");
-      cy.task(
-        "folderRemove",
-        "./cypress/screenshots/" + defaultConfig.resultImagePath
-      ).should("be.null");
-})  
+import "./commands";
+import { defaultConfig } from "./commands";
+before(() => {
+  //only deleting these two because deleting screenshots folder complteley complicates to handle headless mode and gui mode
+  cy.task("folderRemove", "./cypress/" + defaultConfig.testImagePath).should(
+    "be.null"
+  );
+  cy.task("folderRemove", "./cypress/" + defaultConfig.resultImagePath).should(
+    "be.null"
+  );
+  cy.task("folderRemove",  `${Cypress.config().screenshotsFolder}/${Cypress.spec.name}/`).should("be.null");
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
