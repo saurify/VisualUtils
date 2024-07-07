@@ -15,6 +15,17 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import { defaultConfig } from './commands';
+before(()=>{
+    cy.task(
+        "folderRemove",
+        "./cypress/screenshots/" + defaultConfig.testImagePath
+      ).should("be.null");
+      cy.task(
+        "folderRemove",
+        "./cypress/screenshots/" + defaultConfig.resultImagePath
+      ).should("be.null");
+})  
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
