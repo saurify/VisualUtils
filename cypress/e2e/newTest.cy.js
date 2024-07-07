@@ -8,8 +8,8 @@ describe('Single test', () => {
     // config can include a list of selectors of elements which you want to blackout from visual comparison 
 
     //example use
-    // cy.visualTest(".ikrT4e", { isTest: true, testName: "google search bar" })
-    cy.visualTest(".lnXdpd", { isTest: true, testName: "google logo" })
+    cy.visualTest(".ikrT4e", { isTest: true, testName: "google search bar" })
+    // cy.visualTest(".lnXdpd", { isTest: true, testName: "google logo" })
 
     // cy.visualTest(".ikrT4e", { isTest: false, testName: "google search bar" })
     // cy.visualTest(".lnXdpd", { isTest: false, testName: "google logo" })

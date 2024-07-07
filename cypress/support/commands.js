@@ -24,16 +24,13 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { testImage, baseScreenshotRunDir } from "./utils";
 
-import { error } from "console";
-import testImage from "./utils";
-const fs = require('fs');
-
-const defaultConfig = {
+export const defaultConfig = {
   isTest: true,
   threshold: 0.1,
   alpha: 0.1,
-  baselineImagePath: "images/baselineImages/",
+  baselineImagePath: Cypress.env("baselineImageDir"),
   testImagePath: "images/testImages/",
   resultImagePath: "images/results/",
   testName: "testName.png",
@@ -42,37 +39,54 @@ const defaultConfig = {
   rootDir: "cypress/screenshots/",
   logFilename: "logs.json",
   extension: ".png",
-  blackout: [] //selectors of components you want to blackout
+  blackout: [], //selectors of components you want to blackout
 };
+
+Cypress.Commands.add("_", () => {
+  return;
+});
 //config should contain {testName: name, isTest:true, }
 Cypress.Commands.add("visualTest", (selector, config) => {
   config = Object.assign({}, defaultConfig, config);
-  let testResult = false;
-  config.baselineImageName = "b- " + config.testName
-  logManager(config).then((data) => {
-    config = data
-    config.blackout.forEach(blackoutSelector => {
-      cy.get(blackoutSelector).invoke('hide')
 
+  // let testResult = false;
+  config.baselineImageName = "b- " + config.testName;
+  logManager(config).then((data) => {
+    config = data;
+    config.blackout.forEach((blackoutSelector) => {
+      cy.get(blackoutSelector).invoke("hide");
     });
     cy.get(selector).then(($el) => {
+      if (!config.isTest){
+        cy.task(
+          "deleteFile",
+          Cypress.env("baselineImageDir") + config.baselineImageName
+        ).should("be.null");
+      }
       ssGenerator($el, config);
       if (config.isTest) {
-        testResult = testImage(config);
-        if (testResult) {
-          cy.log("Visual regression passed for : ", config.testName)
-        }
-        else {
-          // cy.log("Visual regression failed for : ", config.testName)
-          error("Visual regression failed for : ", config.testName)
-        }
-        logManager(config)
+        testImage(config);
 
-      }
-    }
-    )
-  })
+        //   testImage((config)).then((resConfig)=>{
+        //     console.log("res",resConfig)
+        //     let testResult = resConfig
 
+        //   if (testResult.fail) {
+        //     cy.log("Visual regression passed for : ", config.testName)
+        //   }
+        //   else {
+        //     cy.log("Visual regression failed for : ", config.testName)
+        //     callFail()
+        //     // throw new Error("Visual regression failed for : ", config.testName)
+        //     // cy.log(testImage)
+        //     // console.log(testResult)
+        //   }
+        //   logManager(config)
+        // });
+      } 
+        
+    });
+  });
 
   //   if (!testResult) {
   //     cy.fail("Visual mismatch between baseline and test image");
@@ -103,6 +117,10 @@ function ssGenerator(el, config) {
     });
     // el.screenshot(config.baselineImagePath + baselineImageName);
   } else {
+    cy.task(
+          "deleteFile",
+          baseScreenshotRunDir() + config.testImagePath+ config.testImageName
+        ).should("be.null");
     cy.screenshot(config.testImagePath + config.testImageName, {
       capture: "viewport",
       clip: clipEl,
@@ -111,53 +129,66 @@ function ssGenerator(el, config) {
 }
 
 function logManager(config) {
+  if (Cypress.env("disableLogs")) {
+    return cy._().then(() => {
+      if (!config.resultName) {
+        config.testImageName = "t- " + config.testName;
+      }
+      return config;
+    });
+  }
   let logFilename = config.logFilename;
   let exists;
   let logs;
 
-  return cy.task('fileCheck', logFilename)
+  return cy
+    .task("fileCheck", logFilename)
     .then((data) => {
       exists = data;
     })
     .then(() => {
       if (!exists) {
-        return cy.task('fileSave', [logFilename, JSON.stringify({ "1": [] })]);
+        return cy.task("fileSave", [logFilename, JSON.stringify({ 1: [] })]);
       }
     })
     .then(() => {
-      return cy.task('fileRead', logFilename)
-        .then((data) => {
-          logs = JSON.parse(data);
-          var currentRunId = Math.max(...Object.keys(logs));
+      return cy.task("fileRead", logFilename).then((data) => {
+        logs = JSON.parse(data);
+        var currentRunId = Math.max(...Object.keys(logs));
 
-          if (checkForTest(config.testName, logs[currentRunId])) {
-            currentRunId += 1;
-            logs[currentRunId] = [];
-          }
-          if (!config.resultName) {
-            config.testImageName = "t- " + config.testName + " " + currentRunId;
+        if (checkForTest(config.testName, logs[currentRunId])) {
+          currentRunId += 1;
+          logs[currentRunId] = [];
+        }
+        if (!config.resultName) {
+          config.testImageName = "t- " + config.testName + " " + currentRunId;
 
-            config.currentRunId = currentRunId;
-          } else {
-            logs[currentRunId].push({ testName: config.testName, baselineImageName: config.baselineImageName, testImageName: config.testImageName, resultName: config.resultName, status: config.status });
-            return cy.task('fileSave', [logFilename, JSON.stringify(logs)]);
-          }
-        });
+          config.currentRunId = currentRunId;
+        } else {
+          logs[currentRunId].push({
+            testName: config.testName,
+            baselineImageName: config.baselineImageName,
+            testImageName: config.testImageName,
+            resultName: config.resultName,
+            status: config.status,
+          });
+          return cy.task("fileSave", [logFilename, JSON.stringify(logs)]);
+        }
+      });
     })
     .then(() => {
       return config;
     });
 }
 
-
 function checkForTest(testName, data) {
-  var res = false
+  var res = false;
   data.forEach((el) => {
-    console.log(el)
+    console.log(el);
     if (el["testName"] == testName) {
-      res = true
+      res = true;
     }
-  })
+  });
   // console.log("data", data, res)
-  return res
+  return res;
 }
